@@ -22,45 +22,46 @@ const UseList = () => {
     setCurrentPage(1);
   };
 
-  const indexOfLastRecord = React.useMemo(
-    () => currentPage * recordsPerPage,
-    [currentPage, recordsPerPage]
-  );
+  const indexOfLastRecord = React.useMemo(() => {
+    return currentPage * recordsPerPage;
+  }, [currentPage, recordsPerPage]);
+
   const indexOfFirstRecord = React.useMemo(
     () => indexOfLastRecord - recordsPerPage,
     [indexOfLastRecord, recordsPerPage]
   );
 
-  const totalRecords = React.useMemo(() => {
-    return records.employees_records ? records.employees_records.length : 0;
-  }, [records.employees_records]);
-
-  const totalPages = React.useMemo(() => {
-    return Math.ceil(totalRecords / recordsPerPage);
-  }, [totalRecords, recordsPerPage]);
-
-  const currentRecords = React.useMemo(() => {
-    let filteredRecords = records.employees_records || [];
+  const filteredRecords = React.useMemo(() => {
+    let filtered = records.employees_records || [];
 
     if (search) {
-      filteredRecords = filteredRecords.filter(record =>
+      filtered = filtered.filter(record =>
         record.firstName.toLowerCase().includes(search.toLowerCase())
       );
     }
 
     if (statusFilter !== "ALL") {
-      filteredRecords = filteredRecords.filter(
-        record => record.status === statusFilter
-      );
+      filtered = filtered.filter(record => record.status === statusFilter);
     }
 
+    return filtered;
+  }, [records.employees_records, search, statusFilter]);
+
+  const totalRecords = React.useMemo(() => {
+    return filteredRecords ? filteredRecords.length : 0;
+  }, [filteredRecords]);
+
+  const totalPages = React.useMemo(() => {
+    return Math.ceil(totalRecords / recordsPerPage);
+  }, [totalRecords, recordsPerPage, search, statusFilter]);
+
+  const currentRecords = React.useMemo(() => {
     return filteredRecords.slice(indexOfFirstRecord, indexOfLastRecord);
   }, [
     records.employees_records,
     indexOfFirstRecord,
     indexOfLastRecord,
-    search,
-    statusFilter,
+    filteredRecords,
   ]);
 
   return {
