@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router";
 import { Box, Button, Flex, Header } from "../styled";
-import List from "./List";
+import DataTable from "./Datatable";
 
 const View = () => {
   const history = useHistory();
@@ -9,7 +9,7 @@ const View = () => {
   return (
     <>
       <Header data-cy="header">View Employees</Header>
-      <List />
+      <DataTable />
       <Flex
         direction="column"
         alignItems="center"

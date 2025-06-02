@@ -7,6 +7,7 @@ import FormButtons from "./FormButtons";
 import formValidationSchema from "./formValidationSchema";
 import { saveNewEmployee } from "../../redux/employees/actionCreators";
 import FormSelectField from "./FormSelectField";
+import StatusList from "../../default/employee";
 
 const InitialValues = {
   firstName: "",
@@ -43,11 +44,7 @@ const Create = () => {
             <FormSelectField
               name="status"
               placeholder="Status"
-              options={[
-                { value: "ACTIVE", label: "Active" },
-                { value: "LEAVE_OF_ABSENCE", label: "On Leave" },
-                { value: "TERMINATED", label: "Terminated" },
-              ]}
+              options={StatusList}
             />
             <FormField name="jobTitle" placeholder="Job title" />
             <FormButtons />

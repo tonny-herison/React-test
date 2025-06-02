@@ -4,10 +4,22 @@ import { useSelector } from "react-redux";
 const UseList = () => {
   const records = useSelector(state => state.employees);
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [search, setSearch] = React.useState("");
+  const [statusFilter, setStatusFilter] = React.useState("ALL");
   const [recordsPerPage] = React.useState(10);
 
   const handlePage = page => {
     setCurrentPage(page);
+  };
+
+  const handleSearch = event => {
+    setSearch(event.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleStatusFilter = event => {
+    setStatusFilter(event.target.value);
+    setCurrentPage(1);
   };
 
   const indexOfLastRecord = React.useMemo(
@@ -28,14 +40,28 @@ const UseList = () => {
   }, [totalRecords, recordsPerPage]);
 
   const currentRecords = React.useMemo(() => {
-    if (records.employees_records && records.employees_records.length) {
-      return records.employees_records.slice(
-        indexOfFirstRecord,
-        indexOfLastRecord
+    let filteredRecords = records.employees_records || [];
+
+    if (search) {
+      filteredRecords = filteredRecords.filter(record =>
+        record.firstName.toLowerCase().includes(search.toLowerCase())
       );
     }
-    return [];
-  }, [records.employees_records, indexOfFirstRecord, indexOfLastRecord]);
+
+    if (statusFilter !== "ALL") {
+      filteredRecords = filteredRecords.filter(
+        record => record.status === statusFilter
+      );
+    }
+
+    return filteredRecords.slice(indexOfFirstRecord, indexOfLastRecord);
+  }, [
+    records.employees_records,
+    indexOfFirstRecord,
+    indexOfLastRecord,
+    search,
+    statusFilter,
+  ]);
 
   return {
     currentRecords,
@@ -44,6 +70,9 @@ const UseList = () => {
     handlePage,
     totalRecords,
     totalPages,
+    search,
+    handleSearch,
+    handleStatusFilter,
   };
 };
 
