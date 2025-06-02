@@ -8,7 +8,7 @@ const AppWrapper = styled.div`
   padding-bottom: ${theme.spacings.md};
   display: block;
   background-color: #ffffff;
-  width: 600px;
+  min-width: 600px;
   border-radius: 10px;
   position: relative;
   top: 50%;

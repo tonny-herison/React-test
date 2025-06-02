@@ -1,6 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router";
 import { Box, Button, Flex, Header } from "../styled";
+import List from "./List";
 
 const View = () => {
   const history = useHistory();
@@ -8,6 +9,7 @@ const View = () => {
   return (
     <>
       <Header data-cy="header">View Employees</Header>
+      <List />
       <Flex
         direction="column"
         alignItems="center"

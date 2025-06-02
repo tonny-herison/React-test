@@ -11,5 +11,6 @@ export default styled.div`
   ${height}
 
   display: flex;
+  gap: 10px;
   min-width: 0;
 `;
