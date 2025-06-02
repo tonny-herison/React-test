@@ -1,13 +1,17 @@
 import React, { useCallback } from "react";
 import { Formik } from "formik";
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router";
+import { createClient } from "@supabase/supabase-js";
 import { Flex, Header } from "../styled";
 import FormField from "./FormField";
 import FormButtons from "./FormButtons";
 import formValidationSchema from "./formValidationSchema";
-import { saveNewEmployee } from "../../redux/employees/actionCreators";
+// import { saveNewEmployee } from "../../redux/employees/actionCreators";
 import FormSelectField from "./FormSelectField";
 import StatusList from "../../default/employee";
+import { supabaseKey, supabaseUrl } from "../../configs/supabase";
+import { saveNewEmployee } from "../../redux/employees/actionCreators";
 
 const InitialValues = {
   firstName: "",
@@ -19,10 +23,22 @@ const InitialValues = {
 };
 
 const Create = () => {
+  const history = useHistory();
+  const supabase = createClient(supabaseUrl, supabaseKey);
   const dispatch = useDispatch();
+
   const submitForm = useCallback(
-    employee => {
-      dispatch(saveNewEmployee(employee));
+    async employee => {
+      const { data, error } = await supabase
+        .from("employees")
+        .insert([employee])
+        .select();
+      if (error) {
+        console.error("Error saving employee:", error);
+      } else {
+        history.push("/view");
+        dispatch(saveNewEmployee(data[0]));
+      }
     },
     [dispatch]
   );

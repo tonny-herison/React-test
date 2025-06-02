@@ -1,5 +1,9 @@
 import * as actions from ".";
 
+export const setEmployees = employees => dispatch => {
+  dispatch(actions.setEmployees(employees));
+};
+
 /* eslint-disable import/prefer-default-export */
 export const saveNewEmployee = employee => dispatch => {
   dispatch(actions.saveNewEmployee(employee));

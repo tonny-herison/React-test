@@ -1,17 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { defaultData } from "../../default/data";
 
 const initialState = {
-  employees_records: defaultData,
+  employees_records: [],
 };
 
 const employeeSlice = createSlice({
   name: "employees",
   initialState,
   reducers: {
+    setEmployees: {
+      prepare: employees => ({
+        payload: employees,
+      }),
+      reducer(draftState, action) {
+        draftState.employees_records = action.payload;
+      },
+    },
     saveNewEmployee: {
       prepare: employee => ({
-        payload: { ...employee, id: new Date().getTime() },
+        payload: { ...employee },
       }),
       reducer(draftState, action) {
         draftState.employees_records = [
@@ -46,7 +53,7 @@ const employeeSlice = createSlice({
   },
 });
 
-export const { saveNewEmployee, editEmployee, deleteEmployee } =
+export const { setEmployees, saveNewEmployee, editEmployee, deleteEmployee } =
   employeeSlice.actions;
 
 export default employeeSlice.reducer;

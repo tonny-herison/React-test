@@ -1,18 +1,26 @@
 import React from "react";
-import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
+import { createClient } from "@supabase/supabase-js";
 import { Table, TableCell, TableHeader, TableRow } from "./styled/Table";
 import ButtonAction from "./styled/ButtonAction";
 import { Flex } from "../styled";
-import { deleteEmployee } from "../../redux/employees/actionCreators";
+import { supabaseKey, supabaseUrl } from "../../configs/supabase";
 
-const List = ({ data }) => {
-  const dispatch = useDispatch();
+const List = ({ data, reload }) => {
+  const supabase = createClient(supabaseUrl, supabaseKey);
   const history = useHistory();
 
-  const handleDelete = id => {
-    dispatch(deleteEmployee(id));
+  const handleDelete = async id => {
+    const { error } = await supabase.from("employees").delete().eq("id", id);
+
+    if (error) {
+      console.error("Error deleting employee:", error);
+      return;
+    }
+
+    reload();
   };
+
   return (
     <Table>
       <thead>

@@ -2,12 +2,14 @@ import React, { useCallback } from "react";
 import { Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useHistory } from "react-router";
+import { createClient } from "@supabase/supabase-js";
 import { Flex, Header } from "../styled";
 import FormButtons from "./FormButtons";
 import FormField from "../Create/FormField";
 import FormSelectField from "../Create/FormSelectField";
 import { editEmployee } from "../../redux/employees/actionCreators";
 import formValidationSchema from "../Create/formValidationSchema";
+import { supabaseKey, supabaseUrl } from "../../configs/supabase";
 
 const InitialValues = {
   firstName: "",
@@ -19,6 +21,7 @@ const InitialValues = {
 };
 
 const Edit = () => {
+  const supabase = createClient(supabaseUrl, supabaseKey);
   const dispatch = useDispatch();
   const records = useSelector(state => state.employees);
   const { id } = useParams();
@@ -29,8 +32,17 @@ const Edit = () => {
   }, [records, id]);
 
   const submitForm = useCallback(
-    _employee => {
-      dispatch(editEmployee({ ..._employee, id: parseInt(id, 10) }));
+    async _employee => {
+      const { data, error } = await supabase
+        .from("employees")
+        .update({ ..._employee })
+        .eq("id", id)
+        .select();
+      if (error) {
+        console.error("Error updating employee:", error);
+        return;
+      }
+      dispatch(editEmployee(data[0]));
       history.push("/view");
     },
     [dispatch, history, id]

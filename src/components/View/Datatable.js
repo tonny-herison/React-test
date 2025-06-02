@@ -7,7 +7,7 @@ import { Flex } from "../styled";
 import SelectField from "../Create/styled/SelectField";
 import StatusList from "../../default/employee";
 
-const DataTable = () => {
+const DataTable = ({ reload }) => {
   const {
     currentPage,
     currentRecords,
@@ -41,7 +41,7 @@ const DataTable = () => {
           ))}
         </SelectField>
       </Flex>
-      <List data={currentRecords} />
+      <List data={currentRecords} reload={reload} />
       <Pagination
         currentPage={currentPage}
         recordsPerPage={currentRecords.length}
