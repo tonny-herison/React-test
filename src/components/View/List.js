@@ -1,13 +1,19 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { Table, TableCell, TableHeader, TableRow } from "./styled/Table";
 import ButtonAction from "./styled/ButtonAction";
 import { Flex } from "../styled";
+import { deleteEmployee } from "../../redux/employees/actionCreators";
 
 const List = () => {
   const records = useSelector(state => state.employees);
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const handleDelete = id => {
+    dispatch(deleteEmployee(id));
+  };
 
   return (
     <div>
@@ -24,7 +30,7 @@ const List = () => {
           </tr>
         </thead>
         <tbody>
-          {records.employees_records ? (
+          {records.employees_records && records.employees_records.length ? (
             records.employees_records.map(employee => (
               <TableRow key={employee.id}>
                 <TableCell>{employee.firstName}</TableCell>
@@ -37,20 +43,25 @@ const List = () => {
                   <Flex>
                     <ButtonAction
                       type="button"
-                      onClick={() =>
-                        history.push(`/Edit?employee=${employee.id}`)
-                      }
+                      onClick={() => history.push(`/edit/${employee.id}`)}
                     >
                       Edit
                     </ButtonAction>
-                    <ButtonAction type="button">Delete</ButtonAction>
+                    <ButtonAction
+                      type="button"
+                      onClick={() => handleDelete(employee.id)}
+                    >
+                      Delete
+                    </ButtonAction>
                   </Flex>
                 </TableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan="6">No employees found</TableCell>
+              <TableCell colSpan="7" style={{ textAlign: "center" }}>
+                No employees found
+              </TableCell>
             </TableRow>
           )}
         </tbody>

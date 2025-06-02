@@ -3,6 +3,7 @@ import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import WebFont from "webfontloader";
 import Overview from "../Overview";
 import Create from "../Create";
+import Edit from "../Edit";
 import View from "../View";
 import { AppWrapper, GlobalStyle } from "../styled";
 
@@ -18,6 +19,7 @@ const App = () => {
       <AppWrapper>
         <Switch>
           <Route path="/create" component={Create} />
+          <Route path="/edit/:id" component={Edit} />
           <Route path="/view" component={View} />
           <Route path="/" component={Overview} />
         </Switch>

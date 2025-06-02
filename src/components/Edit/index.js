@@ -1,12 +1,13 @@
 import React, { useCallback } from "react";
 import { Formik } from "formik";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams, useHistory } from "react-router";
 import { Flex, Header } from "../styled";
-import FormField from "./FormField";
 import FormButtons from "./FormButtons";
-import formValidationSchema from "./formValidationSchema";
-import { saveNewEmployee } from "../../redux/employees/actionCreators";
-import FormSelectField from "./FormSelectField";
+import FormField from "../Create/FormField";
+import FormSelectField from "../Create/FormSelectField";
+import { editEmployee } from "../../redux/employees/actionCreators";
+import formValidationSchema from "../Create/formValidationSchema";
 
 const InitialValues = {
   firstName: "",
@@ -17,22 +18,31 @@ const InitialValues = {
   jobTitle: "",
 };
 
-const Create = () => {
+const Edit = () => {
   const dispatch = useDispatch();
+  const records = useSelector(state => state.employees);
+  const { id } = useParams();
+  const history = useHistory();
+
+  const employee = React.useMemo(() => {
+    return records.employees_records.find(emp => emp.id === parseInt(id, 10));
+  }, [records, id]);
+
   const submitForm = useCallback(
-    employee => {
-      dispatch(saveNewEmployee(employee));
+    _employee => {
+      dispatch(editEmployee({ ..._employee, id: parseInt(id, 10) }));
+      history.push("/view");
     },
-    [dispatch]
+    [dispatch, history, id]
   );
 
   return (
     <>
-      <Header>Create new employee</Header>
+      <Header>Edit employee</Header>
       <Formik
         validationSchema={formValidationSchema}
         onSubmit={submitForm}
-        initialValues={InitialValues}
+        initialValues={employee || InitialValues}
       >
         <Flex alignItems="center" justifyContent="center" height="100%">
           <Flex alignItems="left" direction="column" width="300px">
@@ -58,4 +68,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default Edit;
