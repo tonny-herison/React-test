@@ -1,17 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-const defaultEmployee = {
-  id: new Date().getTime(),
-  firstName: "Abe",
-  surname: "Simpson",
-  email: "abe.simpson@springfield.com",
-  birthDate: "1907-05-25",
-  jobTitle: "Work grouch",
-  status: "ACTIVE",
-};
+import { defaultData } from "../../default/data";
 
 const initialState = {
-  employees_records: [defaultEmployee],
+  employees_records: defaultData,
 };
 
 const employeeSlice = createSlice({

@@ -1,13 +1,16 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { Table, TableCell, TableHeader, TableRow } from "./styled/Table";
 import ButtonAction from "./styled/ButtonAction";
 import { Flex } from "../styled";
 import { deleteEmployee } from "../../redux/employees/actionCreators";
+import Pagination from "./Pagination";
+import UseList from "../../hooks/useList";
 
 const List = () => {
-  const records = useSelector(state => state.employees);
+  const { currentPage, currentRecords, totalPages, totalRecords, handlePage } =
+    UseList();
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -30,8 +33,8 @@ const List = () => {
           </tr>
         </thead>
         <tbody>
-          {records.employees_records && records.employees_records.length ? (
-            records.employees_records.map(employee => (
+          {currentRecords && currentRecords.length ? (
+            currentRecords.map(employee => (
               <TableRow key={employee.id}>
                 <TableCell>{employee.firstName}</TableCell>
                 <TableCell>{employee.surname}</TableCell>
@@ -66,6 +69,13 @@ const List = () => {
           )}
         </tbody>
       </Table>
+      <Pagination
+        currentPage={currentPage}
+        recordsPerPage={currentRecords.length}
+        totalRecords={totalRecords}
+        totalPages={totalPages}
+        handleCurrentPage={page => handlePage(page)}
+      />
     </div>
   );
 };
